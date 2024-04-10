@@ -1,4 +1,5 @@
-import { type VNode, cloneElement } from 'preact';
+import { cloneElement } from 'preact';
+import type { FunctionalComponent } from 'preact';
 import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'preact/hooks';
 import { mergeRefs } from './utils';
 
@@ -54,7 +55,7 @@ export type TransitionProps = {
   addEndListener?: (node: Element, done: () => void) => void;
 };
 
-export default (props: TransitionProps): VNode<any> => {
+const Transition: FunctionalComponent<TransitionProps> = (props) => {
   const {
     children,
     in: inProp = false,
@@ -132,3 +133,5 @@ export default (props: TransitionProps): VNode<any> => {
   const child = children(transitionState, phase);
   return cloneElement(child, { ref: mergeRefs(nodeRef, child.ref) });
 };
+
+export default Transition;
