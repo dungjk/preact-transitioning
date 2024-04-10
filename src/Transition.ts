@@ -1,6 +1,6 @@
-import { VNode, cloneElement } from 'preact';
-import { mergeRefs } from 'preact-merge-refs';
+import { type VNode, cloneElement } from 'preact';
 import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'preact/hooks';
+import { mergeRefs } from './utils';
 
 export enum Phase {
   APPEAR = 'appear',
@@ -130,5 +130,5 @@ export default (props: TransitionProps): VNode<any> => {
 
   // Render child
   const child = children(transitionState, phase);
-  return cloneElement(child, { ref: mergeRefs([nodeRef, child.ref]) });
+  return cloneElement(child, { ref: mergeRefs(nodeRef, child.ref) });
 };

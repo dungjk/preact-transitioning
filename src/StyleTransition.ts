@@ -1,6 +1,6 @@
-import { createElement, cloneElement, VNode } from 'preact';
+import { createElement, cloneElement, type VNode } from 'preact';
 import { useMemo } from 'preact/hooks';
-import Transition, { Phase, TransitionProps } from './Transition';
+import Transition, { Phase, type TransitionProps } from './Transition';
 
 type StyleTransitionStyles = {
   [key in Phase]?: object;
@@ -27,7 +27,7 @@ const computeStyle = (phase: Phase, styles: StyleTransitionStyles) => {
 
 export default (props: StyleTransitionProps): VNode<any> => {
   const { children, styles, ...rest } = props;
-  return createElement(Transition, rest, (state, phase: Phase) => {
+  return createElement(Transition, rest, (_state, phase: Phase) => {
     const { style } = children.props;
 
     const finalStyle = useMemo(

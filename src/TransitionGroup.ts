@@ -1,4 +1,5 @@
-import { cloneElement, VNode } from 'preact';
+import type { VNode, FunctionalComponent } from 'preact';
+import { Fragment, cloneElement, createElement, toChildArray } from 'preact';
 import { useRef } from 'preact/hooks';
 
 export type TransitionGroupProps = {
@@ -14,15 +15,15 @@ const getChildProp = (child, propName, defaultValue) => {
   return prop;
 };
 
-export default (props: TransitionGroupProps): VNode<any> => {
+const TransitionGroup: FunctionalComponent<TransitionGroupProps> = (props) => {
   const { children, appear = false, enter = true, exit = true, duration = 500 } = props;
 
-  const derivedChildren = Array.isArray(children) ? children : [children];
+  const derivedChildren = toChildArray(children);
   const firstRenderRef = useRef(true);
   const prevVisibleChildrenRef = useRef([]);
   const nextVisibleChildren = [];
   const nextChildrenKeys = {};
-  const nextChildren: any = [];
+  const nextChildren: VNode<any>[] = [];
 
   const addVisibleChild = (child, removeTimeout) => {
     // No child to add
@@ -66,7 +67,7 @@ export default (props: TransitionGroupProps): VNode<any> => {
     // Key is required for proper work
     const { key } = visibleChild;
     // Search visible child in derived children
-    const foundIndex = derivedChildren.findIndex(child => child.key === key);
+    const foundIndex = derivedChildren.findIndex(child => (child as VNode<any>).key === key);
     // Visible child not found, start to remove it
     if (foundIndex < 0) {
       // Visible child already has remove timeout what means child exiting atm
@@ -101,5 +102,7 @@ export default (props: TransitionGroupProps): VNode<any> => {
   // Save visible children
   prevVisibleChildrenRef.current = nextVisibleChildren;
   firstRenderRef.current = false;
-  return nextChildren;
+  return createElement(Fragment, {}, ...nextChildren)
 };
+
+export default TransitionGroup;
